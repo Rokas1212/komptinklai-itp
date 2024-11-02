@@ -24,15 +24,23 @@ if (session_status() === PHP_SESSION_NONE) {
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="index.php">Pagrindinis</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="paslaugos.php">Paslaugos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="duk.php">DUK</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php">Pagrindinis</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="paslaugos.php">Paslaugos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="rezervacijos.php">Mano Rezervacijos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="duk.php">DUK</a>
+                </li>
+                <?php if (isset($_SESSION['vaidmuo']) && $_SESSION['vaidmuo'] == 'meistras'): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="meistras.php">Meistro Meniu</a>
+                </li>
+                <?php endif; ?>
             </ul>
         </div>
         <span class="navbar-text">

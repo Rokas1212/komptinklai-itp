@@ -6,18 +6,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $el_pastas = $_POST['el_pastas'];
     $slaptazodis = $_POST['slaptazodis'];
     
-    $sql = "SELECT naudotojo_id, vardas, slaptazodis FROM Naudotojai WHERE el_pastas = ?";
+    $sql = "SELECT naudotojo_id, vardas, slaptazodis, vaidmuo FROM Naudotojai WHERE el_pastas = ?";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param('s', $el_pastas);
     $stmt->execute();
     $stmt->store_result();
     
-    $stmt->bind_result($naudotojoId, $vardas, $hashedPassword);
+    $stmt->bind_result($naudotojoId, $vardas, $hashedPassword, $vaidmuo);
     $stmt->fetch();
     
     if ($stmt->num_rows == 1 && password_verify($slaptazodis, $hashedPassword)) {
         $_SESSION['naudotojoId'] = $naudotojoId;
         $_SESSION['vardas'] = $vardas;
+        $_SESSION['vaidmuo'] = $vaidmuo;
         header("Location: index.php");
         exit();
     } else {

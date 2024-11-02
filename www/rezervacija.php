@@ -101,8 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $rezervacijos_data && isset($_POST['
             ?>
         </select>
     </div>
-    <?php endif; ?>
-
     <div class="form-group">
         <label for="paslaugos_id">Paslauga</label>
         <select class="form-control" id="paslaugos_id" name="paslaugos_id" required>
@@ -115,6 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $rezervacijos_data && isset($_POST['
             ?>
         </select>
     </div>
+    <?php endif; ?>
+
 
     <button type="submit" class="btn btn-primary">Rezervuoti</button>
 </form>

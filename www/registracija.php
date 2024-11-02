@@ -47,11 +47,15 @@ include 'header.php';
         </div>
         <div class="form-group">
             <label for="slaptazodis">Slaptažodis:</label>
-            <input type="password" class="form-control" id="slaptazodis" name="slaptazodis" required>
+            <input type="password" class="form-control" id="slaptazodis" name="slaptazodis" required
+                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}"
+                   title="Slaptažodyje turi būti mažiausiai 8 simboliai, didžioji raidė, mažoji raidė, skaičius ir specialus simbolis">
         </div>
         <div class="form-group">
             <label for="telefono_numeris">Telefono numeris:</label>
-            <input type="tel" class="form-control" id="telefono_numeris" name="telefono_numeris" required>
+            <input type="tel" class="form-control" id="telefono_numeris" name="telefono_numeris" required
+                   pattern="^\+?[0-9]{8,15}$"
+                   title="Įveskite galiojantį telefono numerį (8-15 skaitmenų, gali prasidėti +)">
         </div>
         <button type="submit" class="btn btn-primary">Registruotis</button>
     </form>

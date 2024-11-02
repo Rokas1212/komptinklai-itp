@@ -32,6 +32,9 @@ services:
     platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: stud
+      MYSQL_DATABASE: autoservisas
+    ports:
+      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
 
