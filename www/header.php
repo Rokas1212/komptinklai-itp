@@ -1,5 +1,8 @@
 <?php
-include 'db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="lt">
@@ -25,7 +28,7 @@ include 'db.php';
                 <a class="nav-link" href="index.php">Pagrindinis</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="rezervacija.php">Paslaugos</a>
+                <a class="nav-link" href="paslaugos.php">Paslaugos</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="duk.php">DUK</a>
