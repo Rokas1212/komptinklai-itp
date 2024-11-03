@@ -1,6 +1,12 @@
 
 <?php
 include 'db.php';
+session_start();
+
+if (!isset($_SESSION['naudotojoId'])) {
+    header("Location: prisijungimas.php");
+    exit();
+}
 
 $meistro_id = isset($_GET['meistro_id']) ? $_GET['meistro_id'] : null;
 

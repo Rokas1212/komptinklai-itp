@@ -14,6 +14,26 @@ if (session_status() === PHP_SESSION_NONE) {
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <title>Autoservisas</title>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    footer {
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+  </style>
 </head>
 <body>
     <header>
@@ -39,6 +59,11 @@ if (session_status() === PHP_SESSION_NONE) {
                 <?php if (isset($_SESSION['vaidmuo']) && $_SESSION['vaidmuo'] == 'meistras'): ?>
                 <li class="nav-item">
                     <a class="nav-link" href="meistras.php">Meistro Meniu</a>
+                </li>
+                <?php endif; ?>
+                <?php if (isset($_SESSION['vaidmuo']) && $_SESSION['vaidmuo'] == 'vadybininkas'): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="vadybininkas.php">Vadybininko Meniu</a>
                 </li>
                 <?php endif; ?>
             </ul>

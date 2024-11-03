@@ -5,8 +5,8 @@ $slaptazodis = 'stud';
 $db = 'autoservisas';
 
 $mysqli = mysqli_connect($host, $vardas, $slaptazodis, $db);
-
 if (!$mysqli) {
     die("Klaida: " . mysqli_connect_error());
 }
+$mysqli->set_charset("utf8");
 ?>

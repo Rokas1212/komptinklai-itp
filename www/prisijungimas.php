@@ -42,6 +42,7 @@ include 'header.php';
             <input type="password" class="form-control" id="slaptazodis" name="slaptazodis" required>
         </div>
         <button type="submit" class="btn btn-primary">Prisijungti</button>
+        <a href="registracija.php" class="btn btn-link">Registruotis</a>
     </form>
     <?php if (isset($pranesimas)): ?>
     <div class="alert alert-danger mt-3" role="alert">

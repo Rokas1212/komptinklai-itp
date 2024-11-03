@@ -24,6 +24,7 @@ if ($vardas && $el_pastas && $slaptazodis && $telefono_numeris) {
     if ($naudotojoId) {
         $_SESSION['naudotojoId'] = $naudotojoId;
         $_SESSION['vardas'] = $vardas;
+        $_SESSION['vaidmuo'] = "klientas";
 
         header("Location: index.php");
         exit();

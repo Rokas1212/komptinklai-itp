@@ -1,45 +1,54 @@
 <?php
 include 'db.php';
+session_start();
+
+if (!isset($_SESSION['naudotojo_id'])) {
+    header('Location: index.php');
+    exit();
+}
 include 'header.php';
+
 ?>
 
-<h1>Pasirinkite meistrą</h1>
+<div class="container">
+    <h1>Pasirinkite meistrą</h1>
 
-<form action="rezervacija.php" method="get">
-    <div class="form-group">
-        <label for="meistro_id">Pasirinkite meistrą:</label>
-        <select class="form-control" id="meistro_id" name="meistro_id" onchange="loadMechanicProfile()">
-            <option value="">-- Pasirinkite meistrą --</option>
-            <?php
+    <form id="mechanic-form" action="rezervacija.php" method="get">
+        <input type="hidden" name="meistro_id" id="pasirinktas-meistro-id" required>
+        <?php
             $result = mysqli_query($mysqli, "SELECT naudotojo_id, vardas FROM Naudotojai WHERE vaidmuo = 'meistras'");
+
             while ($row = mysqli_fetch_assoc($result)) {
-                echo "<option value='" . $row['naudotojo_id'] . "'>" . $row['vardas'] . "</option>";
+                $meistroId = $row['naudotojo_id'];
+                $meistras = htmlspecialchars($row['vardas']);
+                $hardcodedRating = 4.5;
+
+                echo "<div id='meistro-profilis-$meistroId' class='meistro-profilis mt-3 p-3 border rounded' onclick='pasirinktiMeistra($meistroId)'>";
+                echo "<img src='nuotraukos/mekanik.jpg' alt='Meistro nuotrauka' style='width:150px; height:150px; border-radius:50%;'>";
+                echo "<h3>$meistras</h3>";
+                echo "<p>Įvertinimas: {$hardcodedRating} / 5</p>";
+                echo "</div>";
             }
-            ?>
-        </select>
-    </div>
-    <div id="mechanic-profile" class="mt-3 p-3 border rounded" style="display: none;">
-        <!-- mechaniko profilis -->
-    </div>
-    <button type="submit" class="btn btn-primary">Tęsti</button>
-</form>
+        ?>
+    </form>
+</div>
 
 <script>
-function loadMechanicProfile() {
-    const meistroId = document.getElementById("meistro_id").value;
-    if (meistroId === "") {
-        document.getElementById("mechanic-profile").style.display = "none";
-        return;
-    }
+function pasirinktiMeistra(meistroId) {
+    document.getElementById('pasirinktas-meistro-id').value = meistroId;
 
-    fetch(`meistro_profilis.php?meistro_id=${meistroId}`)
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("mechanic-profile").innerHTML = data;
-            document.getElementById("mechanic-profile").style.display = "block";
-        })
-        .catch(error => console.error('Error fetching mechanic profile:', error));
+    document.getElementById('mechanic-form').submit();
 }
 </script>
+
+<style>
+.meistro-profilis {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.meistro-profilis:hover {
+    background-color: #f1f1f1;
+}
+</style>
 
 <?php include 'footer.php'; ?>

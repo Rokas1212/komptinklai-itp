@@ -1,6 +1,13 @@
 <?php
-include 'header.php';
 include 'db.php';
+session_start();
+
+if(!isset($_SESSION['naudotojoId'])) {
+    header("Location: prisijungimas.php");
+    exit();
+}
+
+include 'header.php';
 ?>
 
 

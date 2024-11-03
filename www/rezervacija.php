@@ -1,6 +1,11 @@
 <?php
-include 'header.php';
+session_start();
 include 'db.php';
+
+if (!isset($_SESSION['naudotojoId'])) {
+    header("Location: prisijungimas.php");
+    exit();
+}
 
 $meistro_id = isset($_GET['meistro_id']) ? $_GET['meistro_id'] : null;
 
@@ -77,46 +82,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $rezervacijos_data && isset($_POST['
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
-    echo "<p>Rezervacija sukurta sėkmingai!</p>";
+    header("Location: rezervacijos.php");
+    exit();
 }
+include 'header.php';
 ?>
+<div class="container-sm">
+    <h1>Rezervacija</h1>
 
-<h1>Rezervacija</h1>
+    <form action="rezervacija.php?meistro_id=<?php echo $meistro_id; ?>" method="post">
+        <div class="form-group">
+            <label for="rezervacijos_data">Pasirinkite datą</label>
+            <input type="date" class="form-control" id="rezervacijos_data" name="rezervacijos_data" value="<?php echo $rezervacijos_data; ?>" required onchange="this.form.submit()">
+        </div>
 
-<form action="rezervacija.php?meistro_id=<?php echo $meistro_id; ?>" method="post">
-    <div class="form-group">
-        <label for="rezervacijos_data">Pasirinkite datą</label>
-        <input type="date" class="form-control" id="rezervacijos_data" name="rezervacijos_data" value="<?php echo $rezervacijos_data; ?>" required onchange="this.form.submit()">
-    </div>
-
-    <?php if ($rezervacijos_data): ?>
-    <div class="form-group">
-        <label for="rezervacijos_laikas">Pasirinkite laiką</label>
-        <select class="form-control" id="rezervacijos_laikas" name="rezervacijos_laikas" required>
-            <option value="">-- Pasirinkite laiką --</option>
-            <?php
-            foreach ($availableTimes as $time) {
-                echo "<option value='$time'>$time</option>";
-            }
-            ?>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="paslaugos_id">Paslauga</label>
-        <select class="form-control" id="paslaugos_id" name="paslaugos_id" required>
-            <option value="">-- Pasirinkite paslaugą --</option>
-            <?php
-            $result = mysqli_query($mysqli, "SELECT paslaugos_id, paslaugos_pavadinimas FROM Paslaugos");
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "<option value='" . $row['paslaugos_id'] . "'>" . $row['paslaugos_pavadinimas'] . "</option>";
-            }
-            ?>
-        </select>
-    </div>
-    <?php endif; ?>
-
-
-    <button type="submit" class="btn btn-primary">Rezervuoti</button>
-</form>
-
+        <?php if ($rezervacijos_data): ?>
+        <div class="form-group">
+            <label for="rezervacijos_laikas">Pasirinkite laiką</label>
+            <select class="form-control" id="rezervacijos_laikas" name="rezervacijos_laikas" required>
+                <option value="">-- Pasirinkite laiką --</option>
+                <?php
+                foreach ($availableTimes as $time) {
+                    echo "<option value='$time'>$time</option>";
+                }
+                ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="paslaugos_id">Paslauga</label>
+            <select class="form-control" id="paslaugos_id" name="paslaugos_id" required>
+                <option value="">-- Pasirinkite paslaugą --</option>
+                <?php
+                $result = mysqli_query($mysqli, "SELECT paslaugos_id, paslaugos_pavadinimas FROM Paslaugos");
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<option value='" . $row['paslaugos_id'] . "'>" . $row['paslaugos_pavadinimas'] . "</option>";
+                }
+                ?>
+            </select>
+        </div>
+        <?php endif; ?>
+        <button type="submit" class="btn btn-primary">Rezervuoti</button>
+    </form>
+</div>
 <?php include 'footer.php'; ?>
