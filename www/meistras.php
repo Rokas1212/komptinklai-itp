@@ -30,12 +30,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
 
     #patikrinti ar diena ir laikas nera jau rezervuoti
+    $sql0 = "SELECT * FROM Prieinamumas WHERE meistro_id = ? AND diena = ? AND laikas = ?";
+    $stmt0 = $mysqli->prepare($sql0);
+    $stmt0->bind_param('iss', $meistro_id, $diena, $laikas);
+    $stmt0->execute();
+    $stmt0->store_result();
     $sql1 = "SELECT * FROM Rezervacijos WHERE meistro_id = ? AND rezervacijos_data = ? AND rezervacijos_laikas = ?";
     $stmt1 = $mysqli->prepare($sql1);
     $stmt1->bind_param('iss', $meistro_id, $diena, $laikas);
     $stmt1->execute();
     $stmt1->store_result();
-    if ($stmt1->num_rows > 0) {
+    if ($stmt1->num_rows > 0 || $stmt0->num_rows > 0) {
         $error = "Šiuo metu jau turi rezervaciją, tad užsidaryti laiko nebegali.";
         echo "<script type='text/javascript'>alert('$error');</script>";
     } else {
@@ -90,21 +95,21 @@ include 'header.php';
         </thead>
         <tbody>
         <?php
-            $rezervacijos = mysqli_query($mysqli, "SELECT * FROM Rezervacijos WHERE meistro_id = $meistro_id");
+            $rezervacijos = mysqli_query($mysqli, "SELECT * FROM Rezervacijos WHERE meistro_id = $meistro_id ORDER BY rezervacijos_data ASC");
             while ($rezervacija = mysqli_fetch_assoc($rezervacijos)) {
-                $paslauga = mysqli_query($mysqli, "SELECT paslaugos_pavadinimas, kaina FROM Paslaugos WHERE paslaugos_id = " . $rezervacija['paslaugos_id']);
-                $paslauga = mysqli_fetch_assoc($paslauga);
-                $klientas = mysqli_query($mysqli, "SELECT vardas FROM Naudotojai WHERE naudotojo_id = " . $rezervacija['kliento_id']);
-                $klientas = mysqli_fetch_assoc($klientas);
-                echo "<tr>";
-                echo "<td>" . $rezervacija['rezervacijos_id'] . "</td>";
-                echo "<td>" . $rezervacija['rezervacijos_data'] . "</td>";
-                echo "<td>" . $rezervacija['rezervacijos_laikas'] . "</td>";
-                echo "<td>" . $paslauga['kaina'] . "</td>";
-                echo "<td>" . $paslauga['paslaugos_pavadinimas'] . "</td>";
-                echo "<td>" . $klientas['vardas'] . "</td>";
-                echo "<td><a href='atšaukti.php?id=" . $rezervacija['rezervacijos_id'] . "'>Atšaukti</a></td>";
-                echo "</tr>";
+            $paslauga = mysqli_query($mysqli, "SELECT paslaugos_pavadinimas, kaina FROM Paslaugos WHERE paslaugos_id = " . $rezervacija['paslaugos_id']);
+            $paslauga = mysqli_fetch_assoc($paslauga);
+            $klientas = mysqli_query($mysqli, "SELECT vardas FROM Naudotojai WHERE naudotojo_id = " . $rezervacija['kliento_id']);
+            $klientas = mysqli_fetch_assoc($klientas);
+            echo "<tr>";
+            echo "<td>" . $rezervacija['rezervacijos_id'] . "</td>";
+            echo "<td>" . $rezervacija['rezervacijos_data'] . "</td>";
+            echo "<td>" . $rezervacija['rezervacijos_laikas'] . "</td>";
+            echo "<td>" . $paslauga['kaina'] . "</td>";
+            echo "<td>" . $paslauga['paslaugos_pavadinimas'] . "</td>";
+            echo "<td>" . $klientas['vardas'] . "</td>";
+            echo "<td><a href='atsaukti.php?id=" . $rezervacija['rezervacijos_id'] . "'>Atšaukti</a></td>";
+            echo "</tr>";
             }
         ?>
         </tbody>
@@ -120,7 +125,7 @@ include 'header.php';
         </thead>
         <tbody>
         <?php
-            $uzimtumai = mysqli_query($mysqli, "SELECT * FROM Prieinamumas WHERE meistro_id = $meistro_id");
+            $uzimtumai = mysqli_query($mysqli, "SELECT * FROM Prieinamumas WHERE meistro_id = $meistro_id ORDER BY diena ASC");
             while ($uzimtumas = mysqli_fetch_assoc($uzimtumai)) {
                 if ($uzimtumas['diena'] < date('Y-m-d')) {
                     continue;
@@ -135,6 +140,7 @@ include 'header.php';
         </tbody>
     </table>
 </div>
+
 
 
 <?php include 'footer.php'; ?>

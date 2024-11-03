@@ -2,6 +2,11 @@
 session_start();
 include 'db.php';
 
+if (isset($_SESSION['naudotojoId'])) {
+    header("Location: index.php");
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $el_pastas = $_POST['el_pastas'];
     $slaptazodis = $_POST['slaptazodis'];

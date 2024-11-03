@@ -37,6 +37,7 @@ services:
       - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
+      - ./sqldump/autoservisas.sql:/docker-entrypoint-initdb.d/autoservisas.sql
 
 volumes:
   db_data:

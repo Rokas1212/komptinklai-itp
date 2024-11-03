@@ -1,9 +1,16 @@
 <?php
-include 'header.php';
+session_start();
+if (!isset($_SESSION['naudotojoId'])) {
+    header("Location: prisijungimas.php");
+    exit();
+}
 include 'db.php';
+
+
 
 $sql = "SELECT * FROM DUK";
 $duk = $mysqli->query($sql);
+include 'header.php';
 ?>
 
 <div class="container">
