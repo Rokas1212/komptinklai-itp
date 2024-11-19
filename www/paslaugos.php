@@ -11,27 +11,39 @@ include 'header.php';
 ?>
 
 <div class="container">
-    <h1>Pasirinkite meistrą</h1>
-
+    <h1 class="mb-4">Pasirinkite meistrą</h1>
     <form id="mechanic-form" action="rezervacija.php" method="get">
         <input type="hidden" name="meistro_id" id="pasirinktas-meistro-id" required>
-        <?php
-            $result = mysqli_query($mysqli, "SELECT naudotojo_id, vardas FROM Naudotojai WHERE vaidmuo = 'meistras'");
-
+        <div class="row">
+            <?php
+            $result = mysqli_query($mysqli, "SELECT naudotojo_id, aprasymas, vardas FROM Naudotojai WHERE vaidmuo = 'meistras'");
             while ($row = mysqli_fetch_assoc($result)) {
                 $meistroId = $row['naudotojo_id'];
+                $aprasymas = htmlspecialchars($row['aprasymas']) ?? "Aprašymas nepateiktas.";
+                $ratingQuery = mysqli_query($mysqli, "SELECT ROUND(AVG(rating), 2) as vidurkis, COUNT(rating) as kiekis FROM Ratings WHERE meistro_id = $meistroId");
+                $rating = mysqli_fetch_assoc($ratingQuery)['vidurkis'] ?? 0;
+                $kiekis = mysqli_fetch_assoc($ratingQuery)['kiekis'] ?? 0;
                 $meistras = htmlspecialchars($row['vardas']);
-                $hardcodedRating = 4.5;
 
-                echo "<div id='meistro-profilis-$meistroId' class='meistro-profilis mt-3 p-3 border rounded' onclick='pasirinktiMeistra($meistroId)'>";
-                echo "<img src='nuotraukos/mekanik.jpg' alt='Meistro nuotrauka' style='width:150px; height:150px; border-radius:50%;'>";
-                echo "<h3>$meistras</h3>";
-                echo "<p>Įvertinimas: {$hardcodedRating} / 5</p>";
+                echo "<div class='col-lg-4 col-md-6 mb-4'>";
+                echo "<div id='meistro-profilis-$meistroId' class='card h-100 border-0 shadow' onclick='pasirinktiMeistra($meistroId)'>";
+                echo "<img src='nuotraukos/mekanik.jpg' class='card-img-top img-fluid' alt='Meistro nuotrauka'>";
+                echo "<div class='card-body'>";
+                echo "<h5 class='card-title text-primary'>$meistras</h5>";
+                echo "<p class='card-text text-muted'>$aprasymas</p>";
+                echo "<div class='d-flex justify-content-between align-items-center'>";
+                echo "<span class='text-muted'>Įvertinimas: {$rating} / 5</span>";
+                echo "<span class='text-muted'>Įvertinimų kiekis: {$kiekis}</span>";
                 echo "</div>";
+                echo "</div>"; // card-body
+                echo "</div>"; // card
+                echo "</div>"; // col
             }
-        ?>
+            ?>
+        </div>
     </form>
 </div>
+
 
 <script>
 function pasirinktiMeistra(meistroId) {
@@ -42,12 +54,20 @@ function pasirinktiMeistra(meistroId) {
 </script>
 
 <style>
-.meistro-profilis {
+.card {
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.meistro-profilis:hover {
-    background-color: #f1f1f1;
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+    height: 300px;
+    object-fit: contain;
+    background-color: #f8f9fa; 
 }
 </style>
 
