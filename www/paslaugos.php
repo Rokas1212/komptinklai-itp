@@ -16,18 +16,27 @@ include 'header.php';
         <input type="hidden" name="meistro_id" id="pasirinktas-meistro-id" required>
         <div class="row">
             <?php
-            $result = mysqli_query($mysqli, "SELECT naudotojo_id, aprasymas, vardas FROM Naudotojai WHERE vaidmuo = 'meistras'");
+            $result = mysqli_query($mysqli, "SELECT naudotojo_id, aprasymas, vardas, nuotrauka FROM Naudotojai WHERE vaidmuo = 'meistras'");
             while ($row = mysqli_fetch_assoc($result)) {
                 $meistroId = $row['naudotojo_id'];
                 $aprasymas = htmlspecialchars($row['aprasymas']) ?? "Aprašymas nepateiktas.";
-                $ratingQuery = mysqli_query($mysqli, "SELECT ROUND(AVG(rating), 2) as vidurkis, COUNT(rating) as kiekis FROM Ratings WHERE meistro_id = $meistroId");
-                $rating = mysqli_fetch_assoc($ratingQuery)['vidurkis'] ?? 0;
-                $kiekis = mysqli_fetch_assoc($ratingQuery)['kiekis'] ?? 0;
+
+                $stmt = $mysqli->prepare("SELECT ROUND(AVG(rating), 2) as vidurkis, COUNT(rating) as kiekis FROM Ratings WHERE meistro_id = ?");
+                $stmt->bind_param("i", $meistroId);
+                $stmt->execute();
+                $ratingQuery = $stmt->get_result();
+                $ratingResult = $ratingQuery->fetch_assoc();
+                
+                $rating = $ratingResult['vidurkis'] ?? 0;
+                $kiekis = $ratingResult['kiekis'] ?? 0;;
+                
+                
+                $nuotrauka = (htmlspecialchars($row['nuotrauka']) == "" ? 'nuotraukos/mekanik.jpg' : htmlspecialchars($row['nuotrauka']));
                 $meistras = htmlspecialchars($row['vardas']);
 
                 echo "<div class='col-lg-4 col-md-6 mb-4'>";
                 echo "<div id='meistro-profilis-$meistroId' class='card h-100 border-0 shadow' onclick='pasirinktiMeistra($meistroId)'>";
-                echo "<img src='nuotraukos/mekanik.jpg' class='card-img-top img-fluid' alt='Meistro nuotrauka'>";
+                echo "<img src='$nuotrauka' class='card-img-top img-fluid' alt='Meistro nuotrauka'>";
                 echo "<div class='card-body'>";
                 echo "<h5 class='card-title text-primary'>$meistras</h5>";
                 echo "<p class='card-text text-muted'>$aprasymas</p>";
