@@ -7,121 +7,103 @@ if (!isset($_SESSION['naudotojoId'])) {
     exit();
 }
 
-$meistro_id = isset($_GET['meistro_id']) ? $_GET['meistro_id'] : null;
-
-if (!$meistro_id) {
-    echo "<p>Meistras nepasirinktas. Grįžkite į <a href='paslaugos.php'>meistro pasirinkimo</a> puslapį.</p>";
-    include 'footer.php';
+if (!isset($_GET['paslaugos-id'])) {
+    header("Location: index.php");
     exit();
 }
 
-$rezervacijos_data = isset($_POST['rezervacijos_data']) ? $_POST['rezervacijos_data'] : null;
-$availableTimes = [];
+$paslaugosId = $_GET['paslaugos-id'] ?? null;
 
-if ($rezervacijos_data) {
-    $unavailableQuery = "
-        SELECT laikas, diena
-        FROM Prieinamumas
-        WHERE meistro_id = ? AND diena = ?";
-    $stmt1 = mysqli_prepare($mysqli, $unavailableQuery);
-    mysqli_stmt_bind_param($stmt1, "is", $meistro_id, $rezervacijos_data);
-    mysqli_stmt_execute($stmt1);
-    $unavailableResult = mysqli_stmt_get_result($stmt1);
+if ($paslaugosId) {
+    $stmt = $mysqli->prepare("SELECT meistro_id FROM MeistrasPaslaugos WHERE paslaugos_id = ?");
+    $stmt->bind_param('i', $paslaugosId);
+    $stmt->execute();
 
-    $unavailableTimes = [];
-    while ($row = mysqli_fetch_assoc($unavailableResult)) {
-        $unavailableTimes[] = $row['laikas'];
+
+    $result = $stmt->get_result();
+    $meistrai = [];
+    while ($row = $result->fetch_assoc()) {
+        $meistrai[] = $row['meistro_id'];
     }
-    mysqli_stmt_close($stmt1);
 
-    $reservationQuery = "
-        SELECT rezervacijos_laikas
-        FROM Rezervacijos
-        WHERE meistro_id = ? AND rezervacijos_data = ?";
-    $stmt2 = mysqli_prepare($mysqli, $reservationQuery);
-    mysqli_stmt_bind_param($stmt2, "is", $meistro_id, $rezervacijos_data);
-    mysqli_stmt_execute($stmt2);
-    $reservationResult = mysqli_stmt_get_result($stmt2);
-    
-    $reservedTimes = [];
-    while ($row = mysqli_fetch_assoc($reservationResult)) {
-        $reservedTimes[] = $row['rezervacijos_laikas'];
+    #get mechanic profiles
+    $meistruProfiliai = [];
+    foreach($meistrai as $meistro_id) {
+        $stmt = $mysqli->prepare("SELECT * FROM Naudotojai WHERE naudotojo_id = ?");
+        $stmt->bind_param('i', $meistro_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $meistras = $result->fetch_assoc();
+        $meistruProfiliai[] = $meistras;
     }
-    mysqli_stmt_close($stmt2);
 
-    $unavailableTimes = array_map(function($time) {
-        return date("H:i", strtotime($time));
-    }, $unavailableTimes);
 
-    $reservedTimes = array_map(function($time) {
-        return date("H:i", strtotime($time));
-    }, $reservedTimes);
-
-    $start = strtotime("9:00");
-    $end = strtotime("18:00");
-
-    while ($start < $end) {
-        $timeSlot = date("H:i", $start);
-        
-        if (!in_array($timeSlot, $unavailableTimes, true) && !in_array($timeSlot, $reservedTimes, true)) {
-            $availableTimes[] = $timeSlot;
-        }
-        
-        $start = strtotime('+60 minutes', $start);
-    }
 }
 
-$naudotojoId = $_SESSION['naudotojoId'];
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && $rezervacijos_data && isset($_POST['rezervacijos_laikas'])) {
-    $kliento_id = $naudotojoId;
-    $paslaugos_id = $_POST['paslaugos_id'];
-    $rezervacijos_laikas = $_POST['rezervacijos_laikas'];
-
-    $stmt = mysqli_prepare($mysqli, "INSERT INTO Rezervacijos (kliento_id, meistro_id, paslaugos_id, rezervacijos_data, rezervacijos_laikas) VALUES (?, ?, ?, ?, ?)");
-    mysqli_stmt_bind_param($stmt, "iiiss", $kliento_id, $meistro_id, $paslaugos_id, $rezervacijos_data, $rezervacijos_laikas);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_close($stmt);
-
-    header("Location: rezervacijos.php");
-    exit();
-}
 include 'header.php';
 ?>
-<div class="container-sm">
-    <h1>Rezervacija</h1>
+<div class="container">
+    <h1 class="mb-4">Pasirinkite meistrą</h1>
+    <form id="mechanic-form" action="rezervacija.php" method="get">
+        <input type="hidden" name="meistro_id" id="pasirinktas-meistro-id" required>
+        <input type="hidden" name="paslaugos-id" value="<?php echo $paslaugosId; ?>">
+            <?php
+                foreach($meistruProfiliai as $meistras) {
+                    
+                    $meistroId = $meistras['naudotojo_id'];
+                    $meistroVardas = $meistras['vardas'];
+                    $aprasymas = $meistras['aprasymas'] ?? "Aprašymas nepateiktas.";
+                    $nuotrauka = ($meistras['nuotrauka'] == "" ? 'nuotraukos/meistras.jpg' : $meistras['nuotrauka']);
 
-    <form action="rezervacija.php?meistro_id=<?php echo $meistro_id; ?>" method="post">
-        <div class="form-group">
-            <label for="rezervacijos_data">Pasirinkite datą</label>
-            <input type="date" class="form-control" id="rezervacijos_data" name="rezervacijos_data" value="<?php echo $rezervacijos_data; ?>" required onchange="this.form.submit()">
-        </div>
+                    $stmt = $mysqli->prepare("SELECT ROUND(AVG(rating), 2) as vidurkis, COUNT(rating) as kiekis FROM Ratings WHERE meistro_id = ?");
+                    $stmt->bind_param("i", $meistroId);
+                    $stmt->execute();
+                    $ratingQuery = $stmt->get_result();
+                    $ratingResult = $ratingQuery->fetch_assoc();
+                    $rating = $ratingResult['vidurkis'] ?? 0;
+                    $kiekis = $ratingResult['kiekis'] ?? 0;
 
-        <?php if ($rezervacijos_data): ?>
-        <div class="form-group">
-            <label for="rezervacijos_laikas">Pasirinkite laiką</label>
-            <select class="form-control" id="rezervacijos_laikas" name="rezervacijos_laikas" required>
-                <option value="">-- Pasirinkite laiką --</option>
-                <?php
-                foreach ($availableTimes as $time) {
-                    echo "<option value='$time'>$time</option>";
+                    echo "<div class='col-lg-4 col-md-6 mb-4'>";
+                    echo "<div id='meistro-profilis-$meistroId' class='card h-100 border-0 shadow' onclick='pasirinktiMeistra($meistroId)'>";
+                    echo "<img src='$nuotrauka' class='card-img-top img-fluid' alt='Meistro nuotrauka'>";
+                    echo "<div class='card-body'>";
+                    echo "<h5 class='card-title text-primary'>$meistroVardas</h5>";
+                    echo "<p class='card-text text-muted'>$aprasymas</p>";
+                    echo "<div class='d-flex justify-content-between align-items-center'>";
+                    echo "<span class='text-muted'>Įvertinimas: {$rating} / 5</span>";
+                    echo "<span class='text-muted'>Įvertinimų kiekis: {$kiekis}</span>";
+                    echo "</div>";
+                    echo "</div>"; // card-body
+                    echo "</div>"; // card
+                    echo "</div>"; // col
                 }
-                ?>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="paslaugos_id">Paslauga</label>
-            <select class="form-control" id="paslaugos_id" name="paslaugos_id" required>
-                <option value="">-- Pasirinkite paslaugą --</option>
-                <?php
-                $result = mysqli_query($mysqli, "SELECT paslaugos_id, paslaugos_pavadinimas FROM Paslaugos");
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<option value='" . $row['paslaugos_id'] . "'>" . $row['paslaugos_pavadinimas'] . "</option>";
-                }
-                ?>
-            </select>
-        </div>
-        <?php endif; ?>
-        <button type="submit" class="btn btn-primary">Rezervuoti</button>
+            ?>
     </form>
 </div>
+<script>
+function pasirinktiMeistra(meistroId) {
+    document.getElementById('pasirinktas-meistro-id').value = meistroId;
+
+    document.getElementById('mechanic-form').submit();
+}
+</script>
+
+<style>
+.card {
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+    height: 300px;
+    object-fit: contain;
+    background-color: #f8f9fa; 
+}
+</style>
+
 <?php include 'footer.php'; ?>
