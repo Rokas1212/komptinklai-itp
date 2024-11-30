@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Nov 30, 2024 at 09:00 PM
+-- Generation Time: Nov 30, 2024 at 10:53 PM
 -- Server version: 5.7.44
 -- PHP Version: 8.2.8
 
@@ -80,7 +80,8 @@ CREATE TABLE `MeistrasPaslaugos` (
 
 INSERT INTO `MeistrasPaslaugos` (`id`, `meistro_id`, `paslaugos_id`) VALUES
 (1, 2, 1),
-(2, 15, 1);
+(11, 15, 4),
+(12, 15, 5);
 
 -- --------------------------------------------------------
 
@@ -146,7 +147,7 @@ INSERT INTO `Paslaugos` (`paslaugos_id`, `paslaugos_pavadinimas`, `aprasymas`, `
 CREATE TABLE `Prieinamumas` (
   `prieinamumo_id` int(11) NOT NULL,
   `meistro_id` int(11) NOT NULL,
-  `diena` date NOT NULL,
+  `data` date NOT NULL,
   `laikas` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_lithuanian_ci;
 
@@ -154,11 +155,12 @@ CREATE TABLE `Prieinamumas` (
 -- Dumping data for table `Prieinamumas`
 --
 
-INSERT INTO `Prieinamumas` (`prieinamumo_id`, `meistro_id`, `diena`, `laikas`) VALUES
+INSERT INTO `Prieinamumas` (`prieinamumo_id`, `meistro_id`, `data`, `laikas`) VALUES
 (1, 2, '2024-11-09', '11:00:00'),
 (2, 2, '2024-11-22', '14:00:00'),
 (3, 2, '2024-11-15', '11:00:00'),
-(4, 2, '2024-11-15', '11:00:00');
+(4, 2, '2024-11-15', '11:00:00'),
+(8, 15, '2024-12-01', '13:00:00');
 
 -- --------------------------------------------------------
 
@@ -215,7 +217,7 @@ INSERT INTO `Rezervacijos` (`rezervacijos_id`, `kliento_id`, `meistro_id`, `pasl
 (24, 2, 15, 2, '2024-11-08', '10:00:00', 1),
 (25, 14, 2, 2, '2024-11-01', '11:00:00', 1),
 (27, 14, 2, 5, '2024-11-06', '09:00:00', 1),
-(28, 14, 15, 5, '2024-11-01', '11:00:00', 1);
+(29, 13, 15, 5, '2024-11-25', '09:00:00', 1);
 
 --
 -- Indexes for dumped tables
@@ -299,7 +301,7 @@ ALTER TABLE `DUK`
 -- AUTO_INCREMENT for table `MeistrasPaslaugos`
 --
 ALTER TABLE `MeistrasPaslaugos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `Naudotojai`
@@ -317,7 +319,7 @@ ALTER TABLE `Paslaugos`
 -- AUTO_INCREMENT for table `Prieinamumas`
 --
 ALTER TABLE `Prieinamumas`
-  MODIFY `prieinamumo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `prieinamumo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `Ratings`
@@ -329,7 +331,7 @@ ALTER TABLE `Ratings`
 -- AUTO_INCREMENT for table `Rezervacijos`
 --
 ALTER TABLE `Rezervacijos`
-  MODIFY `rezervacijos_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `rezervacijos_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Constraints for dumped tables
