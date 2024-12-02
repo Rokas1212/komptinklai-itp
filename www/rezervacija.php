@@ -65,6 +65,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die('Negalima rezervuoti praeityje.');
     }
 
+    $meistrasPaslauga = $mysqli->prepare("SELECT * FROM MeistrasPaslaugos WHERE meistro_id = ? AND paslaugos_id = ?");
+    $meistrasPaslauga->bind_param('ii', $meistroId, $paslaugosId);
+    $meistrasPaslauga->execute();
+    $meistrasPaslaugaResult = $meistrasPaslauga->get_result();
+    if($meistrasPaslaugaResult->num_rows === 0) {
+        die('Meistras neteikia šios paslaugos.');
+    }
+
     $stmt = $mysqli->prepare("INSERT INTO Rezervacijos (meistro_id, paslaugos_id, rezervacijos_data, rezervacijos_laikas, kliento_id, automobilis_id) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param('iisssi', $meistroId, $paslaugosId, $selectedDate, $selectedTime, $_SESSION['naudotojoId'], $automobilisId);
 
