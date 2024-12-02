@@ -51,6 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die('Laikas turi būti tarp 09:00 ir 18:00.');
     }
 
+    #check if minutes 00 and seconds 00
+    $timeParts = explode(':', $selectedTime);
+
+    if (count($timeParts) !== 3 || $timeParts[1] !== '00' || $timeParts[2] !== '00') {
+        die('Laikas turi būti nustatytas su minutėmis ir sekundėmis kaip 00:00.');
+    }
+
     $selectedDateTime = new DateTime($selectedDate . ' ' . $selectedTime);
     $now = new DateTime();
 
