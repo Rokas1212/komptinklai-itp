@@ -46,6 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $paslaugosId = $_POST['paslaugos-id'];
     $automobilisId = $_POST['automobilis_id'];
 
+    #check if time is within 09:00:00 and 18:00:00
+    if ($selectedTime < '09:00:00' || $selectedTime > '18:00:00') {
+        die('Laikas turi būti tarp 09:00 ir 18:00.');
+    }
+
+    #check if time only has hours
+    if (substr($selectedTime, -5) != ':00:00') {
+        die('Laikas turi būti nurodytas tik valandomis.');
+    }
+
     $selectedDateTime = new DateTime($selectedDate . ' ' . $selectedTime);
     $now = new DateTime();
 
@@ -103,6 +113,9 @@ include 'header.php';
             echo "</div>"; // card-body
             echo "</div>"; // card
             echo "</div>"; // col
+        }
+        if(empty($meistruProfiliai)) {
+            echo "<h3>Nėra meistrų šiai paslaugai</h3>";
         }
     ?>
 </div>
