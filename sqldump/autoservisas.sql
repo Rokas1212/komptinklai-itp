@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Dec 02, 2024 at 06:04 PM
+-- Generation Time: Dec 02, 2024 at 07:42 PM
 -- Server version: 5.7.44
 -- PHP Version: 8.2.8
 
@@ -119,11 +119,11 @@ CREATE TABLE `Naudotojai` (
 
 INSERT INTO `Naudotojai` (`naudotojo_id`, `vardas`, `el_pastas`, `slaptazodis`, `telefono_numeris`, `vaidmuo`, `aprasymas`, `nuotrauka`) VALUES
 (1, 'Jonas', 'jonas@example.com', '$2y$10$b3lI6q6gvEcczBJ249juV.y7cois8bcz.R2fjh6ocQ2STLizlPe2e', '+37060000000', 'klientas', '', ''),
-(2, 'Jonas', 'jonas1@example.com', '$2y$10$GH6gPO8/LUOlt3FTIYxcAeTzdHA3u16XqfL01jlYZYvexQKSDmAWS', '+37060000000', 'meistras', 'Pats geriausias meistrelis', 'https://www.shutterstock.com/image-photo/young-african-american-mechanic-working-600nw-2099017543.jpg'),
-(4, 'Petras', 'Petras@meistas.lt', 'Password123!', '+37065793412', 'meistras', '', 'https://www.shutterstock.com/shutterstock/photos/1711144648/display_1500/stock-photo-portrait-shot-of-a-handsome-mechanic-working-on-a-vehicle-in-a-car-service-professional-repairman-1711144648.jpg'),
+(2, 'Jonas', 'jonas1@example.com', '$2y$10$GH6gPO8/LUOlt3FTIYxcAeTzdHA3u16XqfL01jlYZYvexQKSDmAWS', '+37060000000', 'meistras', 'Pats geriausias meistrelis', 'https://itprojektostorage123.blob.core.windows.net/fafafa/young-african-american-mechanic-working-600nw-2099017543.webp'),
+(4, 'Petras', 'Petras@meistas.lt', 'Password123!', '+37065793412', 'meistras', '', 'https://itprojektostorage123.blob.core.windows.net/fafafa/stock-photo-portrait-shot-of-a-handsome-mechanic-working-on-a-vehicle-in-a-car-service-professional-repairman-1711144648.jpg'),
 (13, 'Rokas', 'rokas@admin.com', '$2y$10$GH6gPO8/LUOlt3FTIYxcAeTzdHA3u16XqfL01jlYZYvexQKSDmAWS', '+37065750867', 'klientas', '', ''),
 (14, 'Vadybininkas', 'vadybininkas@administracija.lt', '$2y$10$CLY9E6z0UznDWz5gnmMfZ.rERdB7JhiT0APz1rcumICLZZu9QbdXa', '+37058137412', 'vadybininkas', '', ''),
-(15, 'Meistrelis', 'meistrelis@meistriukas.com', '$2y$10$RVQd0E9rC/F3yp/E3jFb9uZTuCeirKZ8XgLTBTimh1fqMgkGoRESW', '+35192857111', 'meistras', '', 'https://s1.dmcdn.net/v/APIOe1RmGx23XEPO-/x1080'),
+(15, 'Meistrelis', 'meistrelis@meistriukas.com', '$2y$10$RVQd0E9rC/F3yp/E3jFb9uZTuCeirKZ8XgLTBTimh1fqMgkGoRESW', '+35192857111', 'meistras', '', 'https://itprojektostorage123.blob.core.windows.net/fafafa/x1080.jpg'),
 (16, 'Pranas', 'pranelis@gmail.com', '$2y$10$9mtLwKL9RagL3Fpn/s0V0uOvfqZr4/09GElYrbNdgY/IKCje2GjYm', '+37065969999', 'meistras', '', ''),
 (18, 'Naudotojas', 'naudotojas@naudotojas.com', '$2y$10$IcKYps0Q2SAM.TtB84xFRulywNhwlVbVgLQO.UbJPkc5HFUZcN/Vq', '+37065055555', 'klientas', NULL, NULL),
 (19, 'meisterlis2', 'meistrelis2@meisterlis.com', '$2y$10$XICcshu5dNDAFE7Ub7Orduuy1XzGNg5qFeuaNDI9Q21qrtkomyUtS', '+39011155555', 'meistras', NULL, NULL),
@@ -150,10 +150,10 @@ CREATE TABLE `Paslaugos` (
 --
 
 INSERT INTO `Paslaugos` (`paslaugos_id`, `paslaugos_pavadinimas`, `aprasymas`, `kaina`, `nuotrauka`) VALUES
-(1, 'Diagnostika', 'Standartinė automobilio diagnostika', 50.00, 'https://www.ivi-rmainnovation.com/wp-content/uploads/2020/05/Diagnostic-test_II-ok.jpg'),
-(2, 'EGR atjungimas', 'Atjungsim egr ir bus ramus gyvenimas', 99.00, 'https://www.autura.lt/uploads/news/5eb402eb25679207566587.jpg'),
-(3, 'Variklio perrinkimas', 'Bim bam parenkam surenkam nurenkam ir yra', 1000.00, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwxlRi1P9dhS4fP2Ru4uvqWdFuohiXgt2CTA&s'),
-(4, 'Automobilio išrinkimas dalimis', 'Renkam, renkam ir išrenkam', 1500.00, 'https://i0.wp.com/www.mendmotor.com/wp-content/uploads/2024/01/Parts-Of-Car-Diagram-with-Name.webp'),
+(1, 'Diagnostika', 'Standartinė automobilio diagnostika', 50.00, 'https://itprojektostorage123.blob.core.windows.net/fafafa/Diagnostic-test_II-ok.jpg'),
+(2, 'EGR atjungimas', 'Atjungsim egr ir bus ramus gyvenimas', 99.00, 'https://itprojektostorage123.blob.core.windows.net/fafafa/5eb402eb25679207566587.jpg'),
+(3, 'Variklio perrinkimas', 'Bim bam parenkam surenkam nurenkam ir yra', 1000.00, 'https://itprojektostorage123.blob.core.windows.net/fafafa/images.jpg'),
+(4, 'Automobilio išrinkimas dalimis', 'Renkam, renkam ir išrenkam', 1500.00, 'https://itprojektostorage123.blob.core.windows.net/fafafa/Parts-Of-Car-Diagram-with-Name.webp'),
 (5, 'Vairo keitimas', 'Pakeisim vairą pagal jūsų poreikius', 50.00, ''),
 (6, 'Alyvos pakeitimas', 'Pakeisime jūsų alyvą', 100.00, NULL),
 (7, 'Durų remontas', 'suremontuosime automobilio duris', 100.00, NULL),
