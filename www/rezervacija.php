@@ -51,11 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die('Laikas turi būti tarp 09:00 ir 18:00.');
     }
 
-    #check if time only has hours
-    if (substr($selectedTime, -5) != ':00:00') {
-        die('Laikas turi būti nurodytas tik valandomis.');
-    }
-
     $selectedDateTime = new DateTime($selectedDate . ' ' . $selectedTime);
     $now = new DateTime();
 
