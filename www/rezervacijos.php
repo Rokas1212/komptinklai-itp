@@ -22,6 +22,7 @@ include 'header.php';
                 <th>Laikas</th>
                 <th>Kaina</th>
                 <th>Paslauga</th>
+                <th>Automobilis</th>
                 <th>Meistras</th>
                 <th>Įvertink</th>
             </tr>
@@ -37,12 +38,15 @@ include 'header.php';
             $paslauga = mysqli_fetch_assoc($paslauga);
             $rating_query = mysqli_query($mysqli, "SELECT rating FROM Ratings WHERE meistro_id = " . $rezervacija['meistro_id'] . " AND kliento_id = $naudotojo_id");
             $rating = mysqli_fetch_assoc($rating_query)['rating'] ?? 0; // Default to 0 if no rating exists
+            $automobilis = mysqli_query($mysqli, "SELECT * FROM Automobilis WHERE id = " . $rezervacija['automobilis_id']);
+            $automobilis = mysqli_fetch_assoc($automobilis);
             echo "<tr>";
             echo "<td>" . $rezervacija['rezervacijos_id'] . "</td>";
             echo "<td>" . $rezervacija['rezervacijos_data'] . "</td>";
             echo "<td>" . $rezervacija['rezervacijos_laikas'] . "</td>";
             echo "<td>" . $paslauga['kaina'] . "</td>";
             echo "<td>" . $paslauga['paslaugos_pavadinimas'] . "</td>";
+            echo "<td>" . $automobilis['marke'] . ' ' . $automobilis['modelis'] . ' ' . $automobilis['metai_nuo'] . ' - ' . $automobilis['metai_iki'] . "</td>";
             echo "<td>" . $meistras['vardas'] . "</td>";
             if($rezervacija['rezervacijos_data'] < date('Y-m-d')) {
                 echo "<td>
@@ -55,7 +59,7 @@ include 'header.php';
                         <!--// -->
                      </td>";
             } else {
-                echo "<td> :) </td>";
+                echo "<td> (po paslaugos) </td>";
             }
             echo "</tr>";
         }

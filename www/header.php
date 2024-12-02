@@ -47,12 +47,14 @@ if (session_status() === PHP_SESSION_NONE) {
                 <li class="nav-item">
                     <a class="nav-link" href="index.php">Pagrindinis</a>
                 </li>
+                <?php if (isset($_SESSION['vaidmuo']) && $_SESSION['vaidmuo'] == 'klientas'): ?>
                 <li class="nav-item">
                     <a class="nav-link" href="paslaugos.php">Paslaugos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="rezervacijos.php">Mano Rezervacijos</a>
                 </li>
+                <?php endif; ?>
                 <li class="nav-item">
                     <a class="nav-link" href="duk.php">DUK</a>
                 </li>

@@ -58,6 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt1->num_rows > 0 || $stmt0->num_rows > 0) {
         $error = "Šiuo metu jau turi rezervaciją, tad užsidaryti laiko nebegali.";
         echo "<script type='text/javascript'>alert('$error');</script>";
+    }else if ($data < date('Y-m-d')) {
+        $error = "Negalima pridėti užimtumo praeityje.";
+        echo "<script type='text/javascript'>alert('$error');</script>";
     } else {
         $sql = "INSERT INTO Prieinamumas (meistro_id, data, laikas) VALUES (?, ?, ?)";
         $stmt = $mysqli->prepare($sql);
@@ -139,6 +142,7 @@ include 'header.php';
                 <th>Kaina</th>
                 <th>Paslauga</th>
                 <th>Klientas</th>
+                <th>Automobilis</th>
                 <th>Veiksmai</th>
             </tr>
         </thead>
@@ -150,6 +154,8 @@ include 'header.php';
             $paslauga = mysqli_fetch_assoc($paslauga);
             $klientas = mysqli_query($mysqli, "SELECT vardas FROM Naudotojai WHERE naudotojo_id = " . $rezervacija['kliento_id']);
             $klientas = mysqli_fetch_assoc($klientas);
+            $car = mysqli_query($mysqli, "SELECT * FROM Automobilis WHERE id = " . $rezervacija['automobilis_id']);
+            $car = mysqli_fetch_assoc($car);
             echo "<tr>";
             echo "<td>" . $rezervacija['rezervacijos_id'] . "</td>";
             echo "<td>" . $rezervacija['rezervacijos_data'] . "</td>";
@@ -157,7 +163,11 @@ include 'header.php';
             echo "<td>" . $paslauga['kaina'] . "</td>";
             echo "<td>" . $paslauga['paslaugos_pavadinimas'] . "</td>";
             echo "<td>" . $klientas['vardas'] . "</td>";
+            echo "<td>" . $car['marke'] . ' ' . $car['modelis']. ' ' . $car['metai_nuo'] . ' - ' . $car['metai_iki'] . "</td>";
+            if($rezervacija['rezervacijos_data'] > date('Y-m-d')) 
             echo "<td><a href='atsaukti.php?id=" . $rezervacija['rezervacijos_id'] . "'>Atšaukti</a></td>";
+            else
+            echo "<td> Atšaukti nebegalima </td>";
             echo "</tr>";
             }
         ?>
@@ -182,7 +192,11 @@ include 'header.php';
                 echo "<tr id='row-{$uzimtumas['prieinamumo_id']}'>";
                 echo "<td>" . $uzimtumas['data'] . "</td>";
                 echo "<td>" . $uzimtumas['laikas'] . "</td>";
+                if ($uzimtumas['data'] < date('Y-m-d')) {
+                    echo "<td> Nebeištrinama </td>";
+                } else {
                 echo "<td><button class='btn btn-danger btn-sm' onclick='deleteUnavailableTime(" . $uzimtumas['prieinamumo_id'] . ")'>Ištrinti</button></td>";
+                }
                 echo "</tr>";
             }
             ?>
